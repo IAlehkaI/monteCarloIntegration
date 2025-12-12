@@ -41,7 +41,7 @@ object MonteCarloIntegration {
       // Создаем список Future, каждая считает свои точки
       val futures = (0 until threadsNumber).map { taskId =>
         Future {
-          val random = new Random(System.nanoTime() + taskId)
+          val random = new Random()
           val pointsToProcess = pointsPerTask + (if (taskId < remainingPoints) 1 else 0)
 
           var localSuccess = 0L
@@ -69,8 +69,6 @@ object MonteCarloIntegration {
       val rectangleArea = (r - l) * height
       val ratio = totalSuccess.toDouble / pointsNumber
 
-      // Если функция всегда положительная, результат положительный
-      // Если функция всегда отрицательная, результат отрицательный
       val signedArea = rectangleArea * ratio
 
       signedArea
@@ -83,13 +81,10 @@ object MonteCarloIntegration {
 
   // Пример использования
   def main(args: Array[String]): Unit = {
-    // Тест 1: x² dx от 0 до 2 = 8/3 ≈ 2.6667
     def parabola(x: Double): Double = x * x
 
-    // Тест 2: sin(x) dx от 0 до π = 2
     def sinFunc(x: Double): Double = math.sin(x)
 
-    // Тест 3: e^x dx от 0 до 1 = e - 1 ≈ 1.71828
     def expFunc(x: Double): Double = math.exp(x)
 
     println("Интегрирование методом Монте-Карло с использованием Future")
